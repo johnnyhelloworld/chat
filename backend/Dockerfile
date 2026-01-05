@@ -1,19 +1,19 @@
-FROM node:18-alpine
-
-RUN apk add --no-cache openssl
+FROM node:20-alpine
 
 WORKDIR /app
 
 COPY package*.json ./
+
+RUN npm ci
+
 COPY prisma ./prisma/
-
-RUN npm install
-
-# Generate Prisma Client explicitly for the targets defined in schema.prisma
-RUN npx prisma generate
 
 COPY . .
 
+RUN npx prisma generate
+
+RUN npm run build
+
 EXPOSE 3002
 
-CMD ["npm", "run", "start:dev"]
+CMD ["sh", "-c", "npx prisma migrate deploy && npm run start:prod"]

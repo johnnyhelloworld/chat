@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import type { ReactElement } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -6,7 +7,7 @@ import Chat from './pages/Chat';
 import Profile from './pages/Profile';
 import './App.css';
 
-const PrivateRoute = ({ children }: { children: JSX.Element }) => {
+const PrivateRoute = ({ children }: { children: ReactElement }) => {
   const { token } = useAuth();
   return token ? children : <Navigate to="/login" />;
 };

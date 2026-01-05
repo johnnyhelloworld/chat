@@ -11,7 +11,20 @@ Ce projet est une application de chat en temps réel construite avec **NestJS** 
 
 ## Installation et Démarrage
 
-### 1. Backend (API & WebSocket)
+### Option 1 : Avec Docker (Recommandé)
+
+1. Assurez-vous d'avoir **Docker** et **Docker Compose** installés.
+2. À la racine du projet, lancez la commande :
+   ```bash
+   docker-compose up --build
+   ```
+3. Accédez à l'application :
+   - **Frontend** : `http://localhost`
+   - **Backend** : `http://localhost:3002`
+
+### Option 2 : Installation Manuelle (Développement)
+
+#### 1. Backend (API & WebSocket)
 
 Le backend tourne sur le port **3002**.
 
