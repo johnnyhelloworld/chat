@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/client"
+  binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  email       String    @unique
+  username    String    @unique
+  password    String
+  customColor String    @default("#000000")
+  createdAt   DateTime  @default(now())
+
+  messages    Message[]
+  rooms       Room[]    @relation("RoomParticipants")
+  ownedRooms  Room[]    @relation("RoomOwner")
+  reactions   Reaction[]
+}
+
+model Room {
+  id             Int       @id @default(autoincrement())
+  name           String
+  isPrivate      Boolean   @default(false)
+  historyEnabled Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+
+  ownerId      Int?
+  owner        User?     @relation("RoomOwner", fields: [ownerId], references: [id])
+  participants User[]    @relation("RoomParticipants")
+  messages     Message[]
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+
+  senderId Int
+  sender   User @relation(fields: [senderId], references: [id])
+
+  roomId Int?
+  room   Room? @relation(fields: [roomId], references: [id])
+
+  reactions Reaction[]
+}
+
+model Reaction {
+  id        Int      @id @default(autoincrement())
+  emoji     String
+  
+  messageId Int
+  message   Message  @relation(fields: [messageId], references: [id])
+  
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  
+  createdAt DateTime @default(now())
+
+  @@unique([messageId, userId, emoji])
+}
